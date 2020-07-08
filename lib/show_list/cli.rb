@@ -6,17 +6,18 @@ module ShowList
             @input = nil
             menu
             while @input != "exit" && @input != "quit"
-            @input = gets.chomp
+                get_input(
+                    valid_choices: ["1","2","menu"],
+                    error_message: "whooops, didn't understand that. type menu to see a list of optons"
+                )
             if @input == "menu"
                 menu
             elsif @input == "1"
-                puts "print list of shows"
+                print_shows
+                prompt_for_show_choice
             elsif @input == "2"
                 puts "print list of networkds"
-            elsif @input == "exit" || @input == "quit"
-            else
-                puts "whooops, didn't understand that. type menu to see a list of optons"
-
+            
             end
         end
         puts "Thanks for checking out our CLI"
@@ -26,9 +27,33 @@ module ShowList
             puts <<-MENU
             1. list show
             2. list networks
-            3. menu
+            type "help" to see menu options
             or type "exit" or "quit" at any time to leave program.
             MENU
+        end
+
+        def get_input(options)
+            @input = gets.strip
+            return if @input == "exit" || @input == "quit"
+            puts options[:error_message] unless options[:valid_choices].include?(@input)
+            @input
+        end
+
+        def print_shows
+            Show.all.each.with_index(1) do |show, index|
+                puts "#{index}. #{show.name}"
+            end
+        end
+
+        def prompt_for_show_choice
+            puts "which show would you like more info about?"
+            @input = gets.chomp
+            #make sure input is valid before doing this
+            index = @input.to_i - 1
+            if index >= 0
+                puts Show.all.(@input.to_i - 1).description
+            end
+            
         end
     end
 end
