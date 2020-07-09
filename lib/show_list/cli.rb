@@ -46,14 +46,18 @@ module ShowList
         end
 
         def prompt_for_show_choice
-            puts "which show would you like more info about?"
-            @input = gets.chomp
-            #make sure input is valid before doing this
-            index = @input.to_i - 1
-            if index >= 0
-                puts Show.all.(@input.to_i - 1).description
+            while @input != "exit" && @input != "quit" && @input != "back"
+                puts "which show would you like more info about? (type 'list' to see the list again)"
+                puts "type 'back' to return to the main menu or 'exit' to quit the app" 
+                @input = gets.chomp
+                #make sure input is valid before doing this
+                index = @input.to_i - 1
+                if index >= 0
+                puts Show.all[index].summary
+                elsif @input == "list"
+                print_shows
+                end
             end
-            
         end
     end
 end
