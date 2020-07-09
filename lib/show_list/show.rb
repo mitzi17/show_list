@@ -1,22 +1,26 @@
 
 module ShowList
     class Show
-      attr_accessor :name, :description
+      attr_accessor :name, :summary
 
-      
-
-      def initialize(name, description)
-        @name = name
-        @description = description
-      end
-
-      @@all = [
-        Show.new("Friends", "an awesome show about friends in NYC")
-      ]
+      @@all = nil
 
       def self.all
-        @@all
+        @@all || self.load
       end
+
+      def self.load
+        #to collect an array of show instances we use the collect method here
+        API.get_shows.collect do |show_hash|
+          Show.new(show_hash)
+        end
+      end
+
+      def initialize(attributes = { }) #here initialize takes in a hash as an argument
+        @name = attributes["name"]
+        @summary = attributes["summary"]
+      end
+ 
     end
 end
 
